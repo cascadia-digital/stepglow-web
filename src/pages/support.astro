@@ -1,0 +1,62 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const questions = [
+    {
+        q: 'How do I add the widgets?',
+        a: '<strong>Home Screen:</strong> touch and hold an empty spot, tap <strong>Edit</strong>, then <strong>Add Widget</strong>, and search for Stepglow. Swipe to pick a size.<br><strong>Lock Screen:</strong> touch and hold the Lock Screen, tap <strong>Customize</strong>, then <strong>Lock Screen</strong>, and tap the area under the clock (or the date above it).',
+    },
+    {
+        q: 'Why is my widget a little behind?',
+        a: 'iOS decides how often widgets can refresh, usually every 15 minutes or so. The app itself counts live while it\'s open, and opening it also refreshes your widgets.',
+    },
+    {
+        q: 'Why doesn\'t my count match the Health app exactly?',
+        a: 'Stepglow combines Apple Health (which includes your Apple Watch) with your iPhone\'s motion sensor, and shows whichever count is higher. Health can take a little while to catch up, so Stepglow is sometimes ahead of it.',
+    },
+    {
+        q: 'Do I need an Apple Watch?',
+        a: 'No. Your iPhone counts steps on its own. If you wear an Apple Watch, its steps are included through Apple Health.',
+    },
+    {
+        q: 'How do streaks work?',
+        a: 'Every day you reach your goal adds one to your streak. A day below your goal ends it. Today never breaks your streak while it\'s still in progress. Changing your goal only affects today onward, so past days keep the goal they had.',
+    },
+    {
+        q: 'When do I get the "goal reached" notification?',
+        a: 'Shortly after you hit your goal, usually within 15 minutes to an hour, depending on when iOS next lets Stepglow check in. If the app is open, you\'ll see the celebration right away instead.',
+    },
+    {
+        q: 'Stepglow isn\'t showing any steps.',
+        a: 'Check that Stepglow has permission in <strong>Settings → Privacy &amp; Security → Health → Stepglow</strong> and <strong>Settings → Privacy &amp; Security → Motion &amp; Fitness</strong>. You can also tap the <strong>ⓘ</strong> button in the app and choose <strong>Show Intro Again</strong> to go through setup once more.',
+    },
+];
+---
+
+<Layout title="Stepglow Support" description="Help with Stepglow's widgets, streaks, notifications and permissions.">
+    <article class="mx-auto max-w-3xl px-6 pt-16 pb-24 sm:px-10 lg:pt-24">
+        <p class="text-xs font-semibold tracking-[0.14em] text-white/60 uppercase">Support</p>
+        <h1 class="mt-4 text-4xl font-semibold tracking-[-0.04em] sm:text-6xl">How can we help?</h1>
+
+        <div class="mt-10 space-y-3">
+            {questions.map(({ q, a }) => (
+                <details class="group rounded-3xl bg-white/[0.08] ring-1 ring-white/15 backdrop-blur-md">
+                    <summary class="flex cursor-pointer list-none items-center justify-between gap-4 p-6 text-lg font-semibold tracking-tight [&::-webkit-details-marker]:hidden">
+                        {q}
+                        <svg viewBox="0 0 20 20" class="size-5 shrink-0 text-white/60 transition-transform group-open:rotate-45 motion-reduce:transition-none" aria-hidden="true">
+                            <path d="M10 4v12M4 10h12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                        </svg>
+                    </summary>
+                    <div class="stepglow-prose -mt-2 px-6 pb-6">
+                        <p set:html={a} />
+                    </div>
+                </details>
+            ))}
+        </div>
+
+        <div class="stepglow-prose mt-14">
+            <h2>Still stuck?</h2>
+            <p>Email <a href="mailto:info@cascadia.digital">info@cascadia.digital</a> and tell us what's happening. Your iPhone model and iOS version help. We usually reply within a couple of business days.</p>
+        </div>
+    </article>
+</Layout>

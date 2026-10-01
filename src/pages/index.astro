@@ -1,0 +1,195 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+// Sample day for the mockups: steps per hour as a % of the busiest hour.
+const hours = [0, 0, 0, 0, 0, 0, 0, 28, 88, 26, 15, 38, 100, 41, 20, 23, 49, 74, 0, 0, 0, 0, 0, 0];
+const currentHour = 17;
+
+const features = [
+    { title: 'Big on your Home Screen', body: 'Small, medium and large widgets, plus week and month views in the app.' },
+    { title: 'Right on your Lock Screen', body: 'A ring, a number or a single line above the clock. Check in without unlocking.' },
+    { title: 'Streaks & badges', body: 'Hit your goal day after day to build a streak and earn badges, from one week to three years.' },
+    { title: 'Private by design', body: 'Your data never leaves your iPhone. No accounts, no tracking, no ads.' },
+];
+
+const badges = [
+    { value: '1', unit: 'week', state: 'earned' },
+    { value: '2', unit: 'weeks', state: 'next' },
+    { value: '1', unit: 'month', state: 'locked' },
+    { value: '3', unit: 'months', state: 'locked' },
+    { value: '1', unit: 'year', state: 'locked' },
+];
+---
+
+<Layout
+    title="Stepglow: Your steps, at a glance"
+    description="Stepglow puts today's step count on your iPhone Home Screen and Lock Screen, with streaks, badges and week and month views. Big, beautiful and private."
+>
+    {/* Hero */}
+    <section class="mx-auto grid max-w-6xl items-center gap-16 px-6 pt-16 pb-24 sm:px-10 lg:grid-cols-[1.1fr_1fr] lg:pt-24 lg:pb-32">
+        <div>
+            <p class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1.5 text-xs font-semibold tracking-[0.14em] uppercase ring-1 ring-white/20 backdrop-blur">
+                <span class="size-1.5 rounded-full bg-peach"></span>
+                Coming soon to the App Store
+            </p>
+            <h1 class="mt-7 text-5xl font-semibold tracking-[-0.04em] text-balance sm:text-7xl">
+                Your steps, at&nbsp;a&nbsp;glance.
+            </h1>
+            <p class="mt-6 max-w-xl text-lg leading-relaxed text-white/80 sm:text-xl">
+                Stepglow puts today's step count right on your Home Screen and Lock Screen. It's big, beautiful and always up to date, and steps from your Apple Watch count too. No subscription, no account, no digging through apps.
+            </p>
+            <dl class="mt-10 flex flex-wrap gap-x-10 gap-y-4 text-sm text-white/70">
+                <div><dt class="sr-only">Accounts</dt><dd><span class="block text-2xl font-semibold tracking-tight text-white">No</span>sign-up needed</dd></div>
+                <div><dt class="sr-only">Widgets</dt><dd><span class="block text-2xl font-semibold tracking-tight text-white">6</span>widget styles</dd></div>
+                <div><dt class="sr-only">Data collected</dt><dd><span class="block text-2xl font-semibold tracking-tight text-white">0</span>data collected</dd></div>
+            </dl>
+        </div>
+
+        {/* Phone */}
+        <div class="mx-auto w-full max-w-[19rem]" aria-label="The Stepglow app showing 8,432 steps" role="img">
+            <div class="relative rounded-[3.2rem] bg-black p-2.5 shadow-2xl shadow-black/50 ring-1 ring-white/15">
+                <div class="stepglow-screen relative isolate flex aspect-[9/19.5] flex-col overflow-hidden rounded-[2.6rem] px-6 pt-14 pb-7">
+                    <div class="absolute top-3 left-1/2 h-6 w-24 -translate-x-1/2 rounded-full bg-black"></div>
+                    <p class="relative z-10 text-[0.6rem] font-semibold tracking-[0.16em] text-white/75 uppercase">Wednesday, September 30</p>
+                    <div class="relative z-10 mt-auto">
+                        <p class="text-[4.25rem] leading-none font-semibold tracking-[-0.06em] tabular-nums" data-count="8432">8,432</p>
+                        <p class="mt-1 text-sm font-medium text-white/75">steps</p>
+                        <div class="mt-6 h-1 rounded-full bg-white/25"><div class="h-1 w-[84%] rounded-full bg-white"></div></div>
+                        <p class="mt-2.5 flex justify-between text-[0.7rem] font-medium tabular-nums">
+                            <span>84% of 10,000</span><span>6.1 km</span>
+                        </p>
+                        <div class="mt-7 flex h-12 items-end gap-[3px]">
+                            {hours.map((value, hour) => (
+                                <span class:list={['flex-1 rounded-full', hour > currentHour ? 'bg-white/20' : 'bg-white/90']} style={`height: max(3px, ${value}%)`}></span>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {/* Features */}
+    <section class="mx-auto max-w-6xl px-6 pb-24 sm:px-10">
+        <h2 class="max-w-2xl text-3xl font-semibold tracking-[-0.03em] text-balance sm:text-5xl">Everywhere you glance.</h2>
+        <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {features.map((feature, index) => (
+                <div class="rounded-3xl bg-white/[0.07] p-6 ring-1 ring-white/15 backdrop-blur-md">
+                    <p class="text-sm font-semibold tabular-nums text-white/50">0{index + 1}</p>
+                    <h3 class="mt-6 text-lg font-semibold tracking-tight">{feature.title}</h3>
+                    <p class="mt-2 leading-relaxed text-white/75">{feature.body}</p>
+                </div>
+            ))}
+        </div>
+    </section>
+
+    {/* Widgets */}
+    <section class="mx-auto max-w-6xl px-6 pb-28 sm:px-10">
+        <div class="grid items-center gap-12 lg:grid-cols-2">
+            <div class="order-2 lg:order-1">
+                <h2 class="text-3xl font-semibold tracking-[-0.03em] text-balance sm:text-5xl">One look. That's it.</h2>
+                <p class="mt-5 max-w-lg text-lg leading-relaxed text-white/80">
+                    Most step counters bury the number inside an app or behind a paywall. Stepglow puts it where your eyes already go: your Home Screen and Lock Screen. It refreshes through the day as you move, and when you hit your goal, you'll know: a quick buzz, and fireworks next time you open the app.
+                </p>
+            </div>
+
+            <div class="order-1 flex flex-wrap items-end justify-center gap-6 lg:order-2" aria-hidden="true">
+                {/* Large Home Screen widget */}
+                <div class="stepglow-screen relative isolate flex aspect-square w-64 flex-col overflow-hidden rounded-[1.75rem] p-5 shadow-2xl shadow-black/40 ring-1 ring-white/15 sm:w-72">
+                    <p class="relative z-10 text-[0.6rem] font-semibold tracking-[0.14em] text-white/75 uppercase">Wednesday, September 30</p>
+                    <div class="relative z-10 mt-auto">
+                        <p class="text-6xl leading-none font-semibold tracking-[-0.05em] tabular-nums">8,432</p>
+                        <p class="mt-1 text-sm font-medium text-white/75">steps</p>
+                        <div class="mt-4 h-1 rounded-full bg-white/25"><div class="h-1 w-[84%] rounded-full bg-white"></div></div>
+                        <p class="mt-2 flex justify-between text-[0.65rem] font-medium tabular-nums text-white/85"><span>84% of 10K</span><span>6.1 km</span></p>
+                        <div class="mt-4 flex h-9 items-end gap-[2px]">
+                            {hours.map((value, hour) => (
+                                <span class:list={['flex-1 rounded-full', hour > currentHour ? 'bg-white/20' : 'bg-white/90']} style={`height: max(2px, ${value}%)`}></span>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
+                {/* Lock Screen */}
+                <div class="w-56 rounded-[1.75rem] bg-black/35 p-5 text-center ring-1 ring-white/15 backdrop-blur-md">
+                    <p class="text-xs font-semibold text-white/80">Wed 30 · 8,432 steps</p>
+                    <p class="mt-1 text-6xl font-semibold tracking-tight tabular-nums">9:41</p>
+                    <div class="mt-4 flex items-center gap-3 text-left">
+                        <svg viewBox="0 0 44 44" class="size-12 shrink-0">
+                            <circle cx="22" cy="22" r="18" fill="none" stroke="rgb(255 255 255 / 0.25)" stroke-width="4" />
+                            <circle cx="22" cy="22" r="18" fill="none" stroke="white" stroke-width="4" stroke-linecap="round" stroke-dasharray="113.1" stroke-dashoffset="18.1" transform="rotate(-90 22 22)" />
+                            <text x="22" y="26" text-anchor="middle" fill="white" font-size="10" font-weight="600">8.4K</text>
+                        </svg>
+                        <div class="min-w-0 flex-1">
+                            <p class="text-xl leading-none font-semibold tabular-nums">8,432</p>
+                            <p class="mt-1 text-[0.65rem] font-medium text-white/80">steps · 84%</p>
+                            <div class="mt-1.5 h-1 rounded-full bg-white/25"><div class="h-1 w-[84%] rounded-full bg-white"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {/* Streaks */}
+    <section class="mx-auto max-w-6xl px-6 pb-28 sm:px-10">
+        <div class="rounded-[2rem] bg-white/[0.07] p-8 ring-1 ring-white/15 backdrop-blur-md sm:p-12">
+            <div class="grid items-center gap-12 lg:grid-cols-[1fr_1.2fr]">
+                <div>
+                    <p class="flex items-baseline gap-3">
+                        <span class="text-7xl font-semibold tracking-[-0.05em] tabular-nums sm:text-8xl">12</span>
+                        <span class="text-lg font-medium text-white/75">days in a row 🔥</span>
+                    </p>
+                    <h2 class="mt-6 text-3xl font-semibold tracking-[-0.03em] text-balance sm:text-4xl">Keep the streak going.</h2>
+                    <p class="mt-4 max-w-md text-lg leading-relaxed text-white/80">
+                        Hit your goal and Stepglow counts the days in a row. Earn badges along the way, from your first week all the way to three years. Look back through any day, week or month to see how far you've come.
+                    </p>
+                </div>
+
+                {/* Badge shelf: earned ones glow, the next one fills in, the rest wait. */}
+                <ul class="grid grid-cols-3 gap-x-4 gap-y-6 sm:grid-cols-5" aria-label="Streak badges">
+                    {badges.map((badge) => (
+                        <li class="flex flex-col items-center gap-2 text-center">
+                            <span
+                                class:list={[
+                                    'relative flex size-20 flex-col items-center justify-center rounded-full',
+                                    badge.state === 'earned'
+                                        ? 'stepglow-screen overflow-hidden ring-2 ring-white/90 shadow-[0_0_28px_rgb(224_96_122_/_0.55)]'
+                                        : 'bg-white/[0.06] ring-2 ring-white/15',
+                                ]}
+                            >
+                                {badge.state === 'next' && (
+                                    <svg viewBox="0 0 80 80" class="absolute inset-0 size-full -rotate-90" aria-hidden="true">
+                                        <circle cx="40" cy="40" r="39" fill="none" stroke="white" stroke-opacity="0.85" stroke-width="2" stroke-linecap="round" stroke-dasharray="245" stroke-dashoffset="61" />
+                                    </svg>
+                                )}
+                                <span class:list={['relative z-10 text-3xl leading-none font-semibold tabular-nums', { 'opacity-50': badge.state !== 'earned' }]}>{badge.value}</span>
+                                <span class:list={['relative z-10 mt-0.5 text-[0.55rem] font-bold tracking-[0.12em] uppercase', { 'opacity-50': badge.state !== 'earned' }]}>{badge.unit}</span>
+                            </span>
+                            <span class="text-xs font-medium text-white/65">
+                                {badge.state === 'earned' ? 'Earned' : badge.state === 'next' ? '86%' : 'Locked'}
+                            </span>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        </div>
+    </section>
+</Layout>
+
+<script>
+    // Count the hero number up from zero once, unless the visitor prefers reduced motion.
+    const el = document.querySelector<HTMLElement>('[data-count]');
+    if (el && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const target = Number(el.dataset.count);
+        const duration = 1600;
+        const start = performance.now();
+        const tick = (now: number) => {
+            const t = Math.min((now - start) / duration, 1);
+            const eased = 1 - Math.pow(1 - t, 3);
+            el.textContent = Math.round(target * eased).toLocaleString('en-US');
+            if (t < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+    }
+</script>

@@ -1,0 +1,91 @@
+/* Stepglow site: the same look as the iOS app. */
+@import "tailwindcss";
+
+@theme {
+    --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+    --color-night: #14112E;
+    --color-indigo: #2E2170;
+    --color-navy: #16305C;
+    --color-violet: #5B34A0;
+    --color-coral: #E0607A;
+    --color-blue: #3A66D0;
+    --color-peach: #F09A62;
+    --color-rose: #B8467A;
+}
+
+/* Drifting gradient blobs, the web version of the app's MeshGradient. */
+.stepglow-sky {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    background: var(--color-night);
+}
+
+.stepglow-sky::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgb(0 0 0 / 0.2);
+}
+
+.stepglow-blob {
+    position: absolute;
+    width: 60vmax;
+    height: 60vmax;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.75;
+    animation: stepglow-drift 28s ease-in-out infinite alternate;
+}
+
+.stepglow-blob:nth-child(1) { background: var(--color-violet); top: -20vmax; left: -15vmax; }
+.stepglow-blob:nth-child(2) { background: var(--color-coral); top: 20vh; left: 30vw; animation-duration: 34s; animation-delay: -8s; }
+.stepglow-blob:nth-child(3) { background: var(--color-blue); top: -10vmax; right: -25vmax; animation-duration: 40s; animation-delay: -16s; }
+.stepglow-blob:nth-child(4) { background: var(--color-peach); bottom: -35vmax; left: -10vmax; opacity: 0.55; animation-duration: 31s; animation-delay: -4s; }
+.stepglow-blob:nth-child(5) { background: var(--color-rose); bottom: -30vmax; right: -15vmax; animation-duration: 37s; animation-delay: -20s; }
+
+@keyframes stepglow-drift {
+    0%   { transform: translate(0, 0) scale(1); }
+    33%  { transform: translate(8vw, 6vh) scale(1.08); }
+    66%  { transform: translate(-6vw, 10vh) scale(0.94); }
+    100% { transform: translate(4vw, -6vh) scale(1.04); }
+}
+
+/* The mock phone screen gets its own, smaller sky. */
+.stepglow-screen {
+    background:
+        radial-gradient(60% 45% at 50% 48%, var(--color-coral) 0%, transparent 70%),
+        radial-gradient(55% 40% at 10% 85%, var(--color-peach) 0%, transparent 70%),
+        radial-gradient(50% 45% at 95% 55%, var(--color-blue) 0%, transparent 70%),
+        radial-gradient(60% 40% at 15% 30%, var(--color-violet) 0%, transparent 70%),
+        linear-gradient(180deg, var(--color-night), var(--color-indigo) 40%, var(--color-night));
+}
+
+.stepglow-screen::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgb(0 0 0 / 0.18);
+    pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .stepglow-blob { animation: none; }
+}
+
+/* Long-form text on the privacy and support pages. */
+.stepglow-prose {
+    line-height: 1.7;
+    color: rgb(255 255 255 / 0.8);
+
+    & h2 { margin-top: 2.5rem; font-size: 1.25rem; font-weight: 600; letter-spacing: -0.01em; color: white; }
+    & h2:first-child { margin-top: 0; }
+    & p, & ul { margin-top: 0.75rem; }
+    & ul { padding-left: 1.25rem; list-style: disc; }
+    & li + li { margin-top: 0.5rem; }
+    & strong { color: white; font-weight: 600; }
+    & a { color: white; font-weight: 500; text-decoration: underline; text-decoration-color: rgb(255 255 255 / 0.3); text-underline-offset: 4px; }
+    & a:hover { text-decoration-color: white; }
+}

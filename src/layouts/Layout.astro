@@ -1,0 +1,68 @@
+---
+import '../styles/global.css';
+
+interface Props {
+    title: string;
+    description: string;
+}
+
+const { title, description } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const image = new URL('/icon.png', Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <link rel="canonical" href={canonical} />
+        <meta name="theme-color" content="#14112E" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={canonical} />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:image" content={image} />
+        <meta name="twitter:card" content="summary" />
+        <link rel="icon" href="/favicon.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    </head>
+    <body class="min-h-screen bg-night font-sans text-white antialiased selection:bg-white/25">
+        <div class="stepglow-sky" aria-hidden="true">
+            <div class="stepglow-blob"></div>
+            <div class="stepglow-blob"></div>
+            <div class="stepglow-blob"></div>
+            <div class="stepglow-blob"></div>
+            <div class="stepglow-blob"></div>
+        </div>
+
+        <header class="mx-auto flex max-w-6xl items-center justify-between px-6 pt-6 sm:px-10 sm:pt-8">
+            <a href="/" class="flex items-center gap-3 rounded-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">
+                <img src="/icon.png" alt="" class="size-9 rounded-[22%]" width="36" height="36" />
+                <span class="text-lg font-semibold tracking-tight">Stepglow</span>
+            </a>
+            <nav class="flex gap-5 text-sm font-medium text-white/75">
+                <a href="/support" class="rounded px-1 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">Support</a>
+                <a href="/privacy" class="rounded px-1 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">Privacy</a>
+            </nav>
+        </header>
+
+        <main>
+            <slot />
+        </main>
+
+        <footer class="mx-auto max-w-6xl px-6 pb-10 sm:px-10">
+            <div class="flex flex-col gap-3 border-t border-white/15 pt-8 text-sm text-white/65 sm:flex-row sm:items-center sm:justify-between">
+                <p>
+                    Questions or feedback? <a href="mailto:info@cascadia.digital" class="font-medium text-white underline decoration-white/30 underline-offset-4 hover:decoration-white">info@cascadia.digital</a>
+                </p>
+                <p class="flex gap-5">
+                    <a href="/privacy" class="hover:text-white">Privacy</a>
+                    <a href="https://cascadia.digital" class="hover:text-white">Made by Cascadia Digital</a>
+                </p>
+            </div>
+        </footer>
+    </body>
+</html>
