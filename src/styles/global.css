@@ -4,14 +4,16 @@
 @theme {
     --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
 
-    --color-night: #14112E;
-    --color-indigo: #2E2170;
-    --color-navy: #16305C;
-    --color-violet: #5B34A0;
-    --color-coral: #E0607A;
-    --color-blue: #3A66D0;
-    --color-peach: #F09A62;
-    --color-rose: #B8467A;
+    /* Midnight, the app's default theme. */
+    --color-night: #05060F;
+    --color-deep: #0B1030;
+    --color-glow-1: #3B3F9E;
+    --color-glow-2: #2A2370;
+    --color-glow-3: #1A1F5C;
+    --color-glow-4: #14204A;
+    --color-glow-5: #4A3F9E;
+    --color-accent: #A9C1FF;
+    --color-accent-2: #7C8CFF;
 }
 
 /* Drifting gradient blobs, the web version of the app's MeshGradient. */
@@ -27,7 +29,7 @@
     content: "";
     position: absolute;
     inset: 0;
-    background: rgb(0 0 0 / 0.2);
+    background: rgb(0 0 0 / 0.1);
 }
 
 .stepglow-blob {
@@ -35,16 +37,16 @@
     width: 60vmax;
     height: 60vmax;
     border-radius: 50%;
-    filter: blur(80px);
-    opacity: 0.75;
+    filter: blur(90px);
+    opacity: 0.8;
     animation: stepglow-drift 28s ease-in-out infinite alternate;
 }
 
-.stepglow-blob:nth-child(1) { background: var(--color-violet); top: -20vmax; left: -15vmax; }
-.stepglow-blob:nth-child(2) { background: var(--color-coral); top: 20vh; left: 30vw; animation-duration: 34s; animation-delay: -8s; }
-.stepglow-blob:nth-child(3) { background: var(--color-blue); top: -10vmax; right: -25vmax; animation-duration: 40s; animation-delay: -16s; }
-.stepglow-blob:nth-child(4) { background: var(--color-peach); bottom: -35vmax; left: -10vmax; opacity: 0.55; animation-duration: 31s; animation-delay: -4s; }
-.stepglow-blob:nth-child(5) { background: var(--color-rose); bottom: -30vmax; right: -15vmax; animation-duration: 37s; animation-delay: -20s; }
+.stepglow-blob:nth-child(1) { background: var(--color-glow-3); top: -20vmax; left: -15vmax; }
+.stepglow-blob:nth-child(2) { background: var(--color-glow-1); top: 20vh; left: 30vw; animation-duration: 34s; animation-delay: -8s; }
+.stepglow-blob:nth-child(3) { background: var(--color-glow-4); top: -10vmax; right: -25vmax; animation-duration: 40s; animation-delay: -16s; }
+.stepglow-blob:nth-child(4) { background: var(--color-glow-2); bottom: -35vmax; left: -10vmax; opacity: 0.7; animation-duration: 31s; animation-delay: -4s; }
+.stepglow-blob:nth-child(5) { background: var(--color-glow-5); bottom: -30vmax; right: -15vmax; opacity: 0.6; animation-duration: 37s; animation-delay: -20s; }
 
 @keyframes stepglow-drift {
     0%   { transform: translate(0, 0) scale(1); }
@@ -56,18 +58,18 @@
 /* The mock phone screen gets its own, smaller sky. */
 .stepglow-screen {
     background:
-        radial-gradient(60% 45% at 50% 48%, var(--color-coral) 0%, transparent 70%),
-        radial-gradient(55% 40% at 10% 85%, var(--color-peach) 0%, transparent 70%),
-        radial-gradient(50% 45% at 95% 55%, var(--color-blue) 0%, transparent 70%),
-        radial-gradient(60% 40% at 15% 30%, var(--color-violet) 0%, transparent 70%),
-        linear-gradient(180deg, var(--color-night), var(--color-indigo) 40%, var(--color-night));
+        radial-gradient(60% 45% at 50% 48%, var(--color-glow-1) 0%, transparent 70%),
+        radial-gradient(55% 40% at 10% 85%, var(--color-glow-2) 0%, transparent 70%),
+        radial-gradient(50% 45% at 95% 55%, var(--color-glow-4) 0%, transparent 70%),
+        radial-gradient(60% 40% at 15% 30%, var(--color-glow-3) 0%, transparent 70%),
+        linear-gradient(180deg, var(--color-night), var(--color-deep) 40%, var(--color-night));
 }
 
 .stepglow-screen::after {
     content: "";
     position: absolute;
     inset: 0;
-    background: rgb(0 0 0 / 0.18);
+    background: rgb(0 0 0 / 0.08);
     pointer-events: none;
 }
 
