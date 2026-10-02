@@ -1,11 +1,152 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
+// A wandering trail of footprints: a walk up from the bottom left, one full
+// loop (lost, going in circles), then off past the top right.
+const from = { x: 30, y: 285 };
+const to = { x: 378, y: 44 };
+const radius = 56;
+
+const length = Math.hypot(to.x - from.x, to.y - from.y);
+const dir = { x: (to.x - from.x) / length, y: (to.y - from.y) / length };
+const normal = { x: dir.y, y: -dir.x }; // the side the loop bulges toward
+const pivot = { x: from.x + dir.x * length * 0.42, y: from.y + dir.y * length * 0.42 };
+const center = { x: pivot.x + normal.x * radius, y: pivot.y + normal.y * radius };
+const startAngle = Math.atan2(pivot.y - center.y, pivot.x - center.x);
+
+// Share the steps out by distance, so they're evenly spaced along the way.
+const legIn = length * 0.42;
+const loop = 2 * Math.PI * radius;
+const legOut = length * 0.58;
+const total = legIn + loop + legOut;
+const steps = 34;
+
+function point(t: number) {
+    const d = t * total;
+    if (d <= legIn) return { x: from.x + dir.x * d, y: from.y + dir.y * d };
+    if (d <= legIn + loop) {
+        const angle = startAngle - ((d - legIn) / radius);
+        return { x: center.x + Math.cos(angle) * radius, y: center.y + Math.sin(angle) * radius };
+    }
+    const rest = d - legIn - loop;
+    return { x: pivot.x + dir.x * rest, y: pivot.y + dir.y * rest };
+}
+
+const footprints = Array.from({ length: steps }, (_, index) => {
+    const t = index / (steps - 1);
+    const here = point(t);
+    const ahead = point(Math.min(t + 0.004, 1));
+    const behind = point(Math.max(t - 0.004, 0));
+    const angle = Math.atan2(ahead.y - behind.y, ahead.x - behind.x);
+    const side = index % 2 === 0 ? 1 : -1;
+    return {
+        x: here.x + Math.cos(angle + Math.PI / 2) * 6 * side,
+        y: here.y + Math.sin(angle + Math.PI / 2) * 6 * side,
+        rotate: (angle * 180) / Math.PI + 90,
+        flip: side,
+        delay: index * 0.22,
+    };
+});
 ---
 
-<Layout title="Page not found · Stepglow" description="This page doesn't exist.">
-    <section class="mx-auto max-w-3xl px-6 pt-24 pb-32 sm:px-10">
-        <p class="text-7xl font-semibold tracking-[-0.05em] tabular-nums sm:text-8xl">404</p>
-        <h1 class="mt-6 text-3xl font-semibold tracking-[-0.03em] sm:text-4xl">Wrong turn.</h1>
-        <p class="mt-4 text-lg text-white/80">This page doesn't exist. <a href="/" class="font-medium text-white underline decoration-white/30 underline-offset-4 hover:decoration-white">Head back home</a>.</p>
+<Layout title="Page not found · Stepglow" description="You've wandered off the map.">
+    <section class="mx-auto grid max-w-6xl items-center gap-14 px-6 pt-16 pb-28 sm:px-10 lg:grid-cols-[1fr_1.05fr] lg:pt-24">
+        <div>
+            <p class="text-xs font-semibold tracking-[0.14em] text-white/60 uppercase">Page not found</p>
+
+            <p class="mt-6 text-8xl leading-none font-semibold tracking-[-0.06em] tabular-nums sm:text-9xl" data-count="404">404</p>
+            <p class="mt-2 text-xl font-medium text-white/80">steps in the wrong direction</p>
+
+            <div class="mt-8 h-1 max-w-sm rounded-full bg-white/20" aria-hidden="true">
+                <div class="h-1 w-[4%] rounded-full bg-white"></div>
+            </div>
+            <p class="mt-3 max-w-sm text-sm font-medium text-white/70">4% of 10,000. Every step counts, even the lost ones.</p>
+
+            <p class="mt-6 inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1.5 text-sm font-semibold ring-1 ring-white/15">
+                🔥 0 pages found in a row
+            </p>
+
+            <div class="mt-10 flex flex-wrap gap-3">
+                <a href="/" class="rounded-full bg-white px-6 py-3 font-semibold text-night hover:bg-white/90 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">
+                    Retrace your steps
+                </a>
+                <a href="/support" class="rounded-full px-6 py-3 font-semibold ring-1 ring-white/30 hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">
+                    Ask for directions
+                </a>
+            </div>
+        </div>
+
+        <div class="relative" aria-hidden="true">
+            <div class="relative overflow-hidden rounded-[2rem] bg-white/[0.06] ring-1 ring-white/15 backdrop-blur-md">
+                <svg viewBox="0 0 400 320" class="block w-full">
+                    {/* A faint map grid, for the full "off the map" effect. */}
+                    <defs>
+                        <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+                            <path d="M32 0H0V32" fill="none" stroke="white" stroke-opacity="0.06" />
+                        </pattern>
+                    </defs>
+                    <rect width="400" height="320" fill="url(#grid)" />
+                    <text x="370" y="34" text-anchor="end" fill="white" fill-opacity="0.35" font-size="11" font-weight="600" letter-spacing="1.5">HERE BE DRAGONS</text>
+                    <circle cx="30" cy="285" r="5" fill="var(--color-accent)" />
+                    <text x="44" y="289" fill="white" fill-opacity="0.55" font-size="11" font-weight="600">You were here</text>
+
+                    {footprints.map((foot) => (
+                        <g class="footprint" style={`animation-delay: ${foot.delay}s`} transform={`translate(${foot.x.toFixed(1)} ${foot.y.toFixed(1)}) rotate(${foot.rotate.toFixed(1)}) scale(${foot.flip} 1)`}>
+                            <ellipse cx="0" cy="-3" rx="3.4" ry="5.6" fill="white" />
+                            <ellipse cx="0.4" cy="5.2" rx="2.4" ry="2.8" fill="white" />
+                        </g>
+                    ))}
+                </svg>
+            </div>
+
+            {/* The consolation prize. */}
+            <div class="absolute -right-4 -bottom-6 flex items-center gap-3 rounded-2xl bg-black/40 py-3 pr-5 pl-3 ring-1 ring-white/20 backdrop-blur-md sm:-right-6">
+                <span class="stepglow-screen relative flex size-14 shrink-0 flex-col items-center justify-center overflow-hidden rounded-full ring-2 ring-white/90 shadow-[0_0_24px_color-mix(in_srgb,var(--color-accent-2)_55%,transparent)]">
+                    <span class="relative z-10 text-lg leading-none font-semibold tabular-nums">404</span>
+                    <span class="relative z-10 text-[0.45rem] font-bold tracking-[0.14em] uppercase">Lost</span>
+                </span>
+                <span>
+                    <span class="block text-sm font-semibold">New badge: Explorer</span>
+                    <span class="block text-xs text-white/70">For finding a page that doesn't exist.</span>
+                </span>
+            </div>
+        </div>
     </section>
 </Layout>
+
+<style>
+    /* Each footprint appears in turn, lingers, then fades, so the walker loops forever. */
+    .footprint {
+        opacity: 0;
+        animation: footstep 6.6s linear infinite;
+    }
+
+    @keyframes footstep {
+        0% { opacity: 0; }
+        3% { opacity: 0.85; }
+        45% { opacity: 0.85; }
+        70%, 100% { opacity: 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .footprint {
+            animation: none;
+            opacity: 0.6;
+        }
+    }
+</style>
+
+<script>
+    // Count up to 404, like the app's step counter, unless the visitor prefers reduced motion.
+    const el = document.querySelector<HTMLElement>('[data-count]');
+    if (el && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const target = Number(el.dataset.count);
+        const start = performance.now();
+        const tick = (now: number) => {
+            const t = Math.min((now - start) / 1400, 1);
+            el.textContent = String(Math.round(target * (1 - Math.pow(1 - t, 3))));
+            if (t < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+    }
+</script>
