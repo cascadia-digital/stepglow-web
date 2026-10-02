@@ -16,6 +16,51 @@
     --color-accent-2: #7C8CFF;
 }
 
+/* The app's other themes, switched by the hidden theme picker (see ThemeSwitcher).
+   Midnight is the default above. */
+:root { --shade: 0.1; }
+[data-theme="dusk"] {
+    --color-night: #14112E; --color-deep: #2E2170;
+    --color-glow-1: #E0607A; --color-glow-2: #B8467A; --color-glow-3: #5B34A0; --color-glow-4: #3A66D0; --color-glow-5: #F09A62;
+    --color-accent: #F09A62; --color-accent-2: #E0607A;
+    --shade: 0.18;
+}
+[data-theme="ember"] {
+    --color-night: #1A0708; --color-deep: #3D0E14;
+    --color-glow-1: #C24A32; --color-glow-2: #96302C; --color-glow-3: #7A1E24; --color-glow-4: #5C1730; --color-glow-5: #D98B48;
+    --color-accent: #F5C565; --color-accent-2: #EE9A52;
+    --shade: 0.2;
+}
+[data-theme="aurora"] {
+    --color-night: #04121F; --color-deep: #0B2E3F;
+    --color-glow-1: #27A57C; --color-glow-2: #5F47B0; --color-glow-3: #0F5C5A; --color-glow-4: #3B2C7A; --color-glow-5: #0A3D4A;
+    --color-accent: #9AF5D0; --color-accent-2: #45C99A;
+    --shade: 0.18;
+}
+[data-theme="tidepool"] {
+    --color-night: #061A26; --color-deep: #0E3A52;
+    --color-glow-1: #358F9C; --color-glow-2: #2C7A8C; --color-glow-3: #16627A; --color-glow-4: #1D4E6E; --color-glow-5: #6FB3A9;
+    --color-accent: #C9F2EA; --color-accent-2: #8FD3C9;
+    --shade: 0.22;
+}
+[data-theme="bloom"] {
+    --color-night: #2A1638; --color-deep: #5B2E6E;
+    --color-glow-1: #E08AA4; --color-glow-2: #C46E9A; --color-glow-3: #A4528D; --color-glow-4: #7E5AC9; --color-glow-5: #E8B08A;
+    --color-accent: #FFDDB8; --color-accent-2: #F7B2CB;
+    --shade: 0.24;
+}
+[data-theme="graphite"] {
+    --color-night: #0B0B0D; --color-deep: #1E1F24;
+    --color-glow-1: #6A6D78; --color-glow-2: #4A4D57; --color-glow-3: #3A3C44; --color-glow-4: #2A2C33; --color-glow-5: #7E818B;
+    --color-accent: #FFFFFF; --color-accent-2: #D3D6DD;
+    --shade: 0.16;
+}
+
+/* Colour changes glide rather than snap. */
+body, .stepglow-sky, .stepglow-blob, .stepglow-screen {
+    transition: background-color 0.8s ease, background 0.8s ease;
+}
+
 /* Drifting gradient blobs, the web version of the app's MeshGradient. */
 .stepglow-sky {
     position: fixed;
@@ -29,7 +74,8 @@
     content: "";
     position: absolute;
     inset: 0;
-    background: rgb(0 0 0 / 0.1);
+    background: rgb(0 0 0 / var(--shade));
+    transition: background 0.8s ease;
 }
 
 .stepglow-blob {
@@ -75,6 +121,13 @@
 
 @media (prefers-reduced-motion: reduce) {
     .stepglow-blob { animation: none; }
+    body, .stepglow-sky, .stepglow-sky::after, .stepglow-blob, .stepglow-screen { transition: none; }
+}
+
+/* A "goal met" day, in the theme's accent. */
+.stepglow-met {
+    background: linear-gradient(135deg, var(--color-accent), var(--color-accent-2));
+    color: var(--color-night);
 }
 
 /* Long-form text on the privacy and support pages. */

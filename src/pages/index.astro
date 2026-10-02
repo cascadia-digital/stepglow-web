@@ -12,6 +12,43 @@ const features = [
     { title: 'Private by design', body: 'Your data never leaves your iPhone. No accounts, no tracking, no ads.' },
 ];
 
+// The app's themes, for the Plus swatches. Colours match the app exactly.
+const themes = [
+    { id: 'midnight', name: 'Midnight', free: true, night: '#05060F', glows: ['#3B3F9E', '#2A2370', '#1A1F5C'], accent: ['#A9C1FF', '#7C8CFF'] },
+    { id: 'dusk', name: 'Dusk', night: '#14112E', glows: ['#E0607A', '#F09A62', '#5B34A0'], accent: ['#F09A62', '#E0607A'] },
+    { id: 'ember', name: 'Ember', night: '#1A0708', glows: ['#C24A32', '#D98B48', '#7A1E24'], accent: ['#F5C565', '#EE9A52'] },
+    { id: 'aurora', name: 'Aurora', night: '#04121F', glows: ['#27A57C', '#5F47B0', '#0F5C5A'], accent: ['#9AF5D0', '#45C99A'] },
+    { id: 'tidepool', name: 'Tidepool', night: '#061A26', glows: ['#358F9C', '#6FB3A9', '#16627A'], accent: ['#C9F2EA', '#8FD3C9'] },
+    { id: 'bloom', name: 'Bloom', night: '#2A1638', glows: ['#E08AA4', '#E8B08A', '#7E5AC9'], accent: ['#FFDDB8', '#F7B2CB'] },
+    { id: 'graphite', name: 'Graphite', night: '#0B0B0D', glows: ['#6A6D78', '#7E818B', '#3A3C44'], accent: ['#FFFFFF', '#D3D6DD'] },
+];
+
+const swatchBackground = (theme: (typeof themes)[number]) =>
+    [
+        `radial-gradient(70% 50% at 50% 45%, ${theme.glows[0]} 0%, transparent 70%)`,
+        `radial-gradient(60% 45% at 15% 90%, ${theme.glows[1]} 0%, transparent 70%)`,
+        `radial-gradient(60% 45% at 90% 15%, ${theme.glows[2]} 0%, transparent 70%)`,
+        theme.night,
+    ].join(', ');
+
+// A sample month for the history mockups: each day's steps as a share of the goal.
+const month = [1.12, 0.84, 1.31, 1.05, 0.46, 1.02, 1.18, 0.93, 1.4, 1.07, 0.71, 0.38, 1.22, 1.24, 0.97, 1.01, 1.15, 0.62, 1.09, 1.33, 0.58];
+const monthOffset = 3; // the 1st falls on a Wednesday
+const monthLength = 31;
+const today = month.length - 1;
+const weekdays = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+const ringLength = 2 * Math.PI * 15;
+
+const plus = [
+    { title: 'Every theme', body: 'Six more looks, each with matching widgets and a matching app icon.' },
+    { title: 'Your whole history', body: 'Step back through past weeks and months, with a daily chart and a calendar of the days you hit your goal.' },
+    { title: 'Any day, in detail', body: 'Tap a day to see its steps, distance and hour-by-hour pattern.' },
+    { title: "What's next", body: 'New Plus features are included. You pay once, not again.' },
+];
+
+const free = ["Today's steps, counting live", 'Every Home Screen and Lock Screen widget', 'Your daily goal, with celebrations', 'This week and this month', 'Streaks and badges'];
+const plusOnly = ['Every theme, with matching widgets and icons', 'Past weeks and months', 'Daily chart and goal calendar history', "Any day's full details", 'Future Plus features'];
+
 const badges = [
     { value: '1', unit: 'week', state: 'earned' },
     { value: '2', unit: 'weeks', state: 'next' },
@@ -157,7 +194,7 @@ const badges = [
                                 class:list={[
                                     'relative flex size-20 flex-col items-center justify-center rounded-full',
                                     badge.state === 'earned'
-                                        ? 'stepglow-screen overflow-hidden ring-2 ring-white/90 shadow-[0_0_28px_rgb(124_140_255_/_0.55)]'
+                                        ? 'stepglow-screen overflow-hidden ring-2 ring-white/90 shadow-[0_0_28px_color-mix(in_srgb,var(--color-accent-2)_55%,transparent)]'
                                         : 'bg-white/[0.06] ring-2 ring-white/15',
                                 ]}
                             >
@@ -177,6 +214,173 @@ const badges = [
                 </ul>
             </div>
         </div>
+    </section>
+
+    {/* Stepglow Plus */}
+    <section id="plus" class="mx-auto max-w-6xl scroll-mt-8 px-6 pb-24 sm:px-10">
+        <p class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1.5 text-xs font-semibold tracking-[0.14em] uppercase ring-1 ring-white/20 backdrop-blur">
+            <span class="size-1.5 rounded-full bg-accent"></span>
+            Optional upgrade
+        </p>
+        <h2 class="mt-6 max-w-3xl text-4xl font-semibold tracking-[-0.04em] text-balance sm:text-6xl">Stepglow Plus</h2>
+        <p class="mt-5 max-w-2xl text-lg leading-relaxed text-white/80 sm:text-xl">
+            Everything above is free. Plus is one small, one-time purchase for people who want more: every theme, and your whole history. No subscription, and Family Sharing is included.
+        </p>
+
+        <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {plus.map((item) => (
+                <div class="rounded-3xl bg-white/[0.07] p-6 ring-1 ring-white/15 backdrop-blur-md">
+                    <span class="stepglow-met inline-flex size-7 items-center justify-center rounded-full text-sm font-bold" aria-hidden="true">+</span>
+                    <h3 class="mt-5 text-lg font-semibold tracking-tight">{item.title}</h3>
+                    <p class="mt-2 leading-relaxed text-white/75">{item.body}</p>
+                </div>
+            ))}
+        </div>
+    </section>
+
+    {/* Themes */}
+    <section class="mx-auto max-w-6xl px-6 pb-24 sm:px-10">
+        <div class="grid items-end gap-6 lg:grid-cols-[1fr_auto]">
+            <div>
+                <h2 class="text-3xl font-semibold tracking-[-0.03em] text-balance sm:text-5xl">Seven ways to glow.</h2>
+                <p class="mt-4 max-w-xl text-lg leading-relaxed text-white/80">
+                    Midnight is free. The other six come with Plus, and your widgets and app icon change to match.
+                </p>
+            </div>
+            <p class="text-sm font-medium text-white/60">Go on, tap one.</p>
+        </div>
+
+        <ul class="mt-10 flex snap-x gap-4 overflow-x-auto pb-4 [scrollbar-width:none] lg:grid lg:grid-cols-7 lg:overflow-visible" aria-label="Try a theme on this page">
+            {themes.map((theme) => (
+                <li class="shrink-0 snap-start">
+                    <button
+                        type="button"
+                        data-theme-pick={theme.id}
+                        aria-pressed={theme.id === 'midnight' ? 'true' : 'false'}
+                        class="group flex w-32 flex-col items-center gap-3 rounded-[1.6rem] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white lg:w-full"
+                    >
+                        <span
+                            class="relative flex aspect-[9/14] w-full flex-col justify-end overflow-hidden rounded-[1.4rem] p-3 text-left ring-1 ring-white/15 transition group-hover:-translate-y-1 group-aria-pressed:ring-2 group-aria-pressed:ring-white motion-reduce:transition-none"
+                            style={`background: ${swatchBackground(theme)}`}
+                        >
+                            <span class="text-xl leading-none font-semibold tracking-tight tabular-nums">8,432</span>
+                            <span class="mt-0.5 text-[0.6rem] font-medium text-white/75">steps</span>
+                            <span class="mt-2.5 flex gap-1" aria-hidden="true">
+                                <span class="size-3 rounded-full" style={`background: linear-gradient(135deg, ${theme.accent[0]}, ${theme.accent[1]})`}></span>
+                                <span class="size-3 rounded-full" style={`background: linear-gradient(135deg, ${theme.accent[0]}, ${theme.accent[1]})`}></span>
+                                <span class="size-3 rounded-full ring-1 ring-white/30"></span>
+                            </span>
+                            <img src={`/icons/${theme.id}.png`} alt="" class="absolute top-3 right-3 size-7 rounded-[22%]" width="28" height="28" loading="lazy" />
+                        </span>
+                        <span class="flex items-center gap-1.5 text-sm font-semibold">
+                            {theme.name}
+                            <span class="rounded-full bg-white/10 px-1.5 py-0.5 text-[0.6rem] font-bold tracking-wide text-white/70 uppercase">{theme.free ? 'Free' : 'Plus'}</span>
+                        </span>
+                    </button>
+                </li>
+            ))}
+        </ul>
+    </section>
+
+    {/* History */}
+    <section class="mx-auto max-w-6xl px-6 pb-28 sm:px-10">
+        <div class="grid items-center gap-12 lg:grid-cols-[1fr_1.15fr]">
+            <div>
+                <h2 class="text-3xl font-semibold tracking-[-0.03em] text-balance sm:text-5xl">See how far you've come.</h2>
+                <p class="mt-5 max-w-lg text-lg leading-relaxed text-white/80">
+                    With Plus, flip back through every week and month Stepglow can see. A daily chart shows your rhythm at a glance, the calendar lights up every day you hit your goal, and any day opens up into its full story.
+                </p>
+            </div>
+
+            <div class="grid gap-4 sm:grid-cols-[1.15fr_1fr]" aria-hidden="true">
+                {/* Month calendar */}
+                <div class="rounded-[1.75rem] bg-white/[0.07] p-5 ring-1 ring-white/15 backdrop-blur-md">
+                    <div class="flex items-center justify-between text-[0.65rem] font-semibold tracking-[0.14em] text-white/70 uppercase">
+                        <span>October 2026</span>
+                        <span class="flex gap-3 text-sm text-white"><span>‹</span><span class="opacity-40">›</span></span>
+                    </div>
+                    <p class="mt-4 text-4xl font-semibold tracking-[-0.04em] tabular-nums">198,472</p>
+                    <p class="text-xs font-medium text-white/70">steps in October · 14 of 21 days at goal</p>
+                    <div class="mt-4 grid grid-cols-7 gap-1 text-center text-[0.6rem] font-semibold">
+                        {weekdays.map((day) => <span class="pb-1 text-white/50">{day}</span>)}
+                        {Array.from({ length: monthOffset }).map(() => <span></span>)}
+                        {Array.from({ length: monthLength }).map((_, index) => {
+                            const progress = month[index];
+                            const met = progress !== undefined && progress >= 1;
+                            const future = progress === undefined;
+                            return (
+                                <span class="relative mx-auto flex size-7 items-center justify-center">
+                                    {met && <span class="stepglow-met absolute inset-0 rounded-full"></span>}
+                                    {!met && !future && (
+                                        <svg viewBox="0 0 36 36" class="absolute inset-0 size-full -rotate-90">
+                                            <circle cx="18" cy="18" r="15" fill="none" stroke="rgb(255 255 255 / 0.2)" stroke-width="3" />
+                                            <circle cx="18" cy="18" r="15" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-dasharray={ringLength} stroke-dashoffset={ringLength * (1 - progress)} />
+                                        </svg>
+                                    )}
+                                    {index === today && <span class="absolute -inset-1 rounded-full ring-1 ring-white"></span>}
+                                    <span class:list={['relative tabular-nums', { 'text-white/30': future, 'text-night': met }]}>{index + 1}</span>
+                                </span>
+                            );
+                        })}
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-4">
+                    {/* Daily chart */}
+                    <div class="rounded-[1.75rem] bg-white/[0.07] p-5 ring-1 ring-white/15 backdrop-blur-md">
+                        <p class="text-[0.65rem] font-semibold tracking-[0.14em] text-white/70 uppercase">Daily steps</p>
+                        <div class="relative mt-4 flex h-28 items-end gap-[3px]">
+                            <span class="absolute inset-x-0 border-t border-dashed border-white/50" style="bottom: 62%"></span>
+                            {month.map((progress) => (
+                                <span class:list={['flex-1 rounded-t-sm', progress >= 1 ? 'stepglow-met' : 'bg-white/40']} style={`height: ${Math.min(progress, 1.45) * 62}%`}></span>
+                            ))}
+                        </div>
+                        <p class="mt-2 text-[0.6rem] font-medium text-white/60">Dashed line: your goal</p>
+                    </div>
+
+                    {/* Day detail */}
+                    <div class="rounded-[1.75rem] bg-white/[0.07] p-5 ring-1 ring-white/15 backdrop-blur-md">
+                        <p class="text-[0.65rem] font-semibold tracking-[0.14em] text-white/70 uppercase">Tuesday, October 13</p>
+                        <p class="mt-2 text-3xl font-semibold tracking-[-0.04em] tabular-nums">12,208</p>
+                        <p class="mt-1 flex justify-between text-xs font-medium text-white/80">
+                            <span>✓ Goal reached</span><span>9.1 km</span>
+                        </p>
+                        <div class="mt-3 flex h-8 items-end gap-[2px]">
+                            {hours.map((value) => (
+                                <span class="flex-1 rounded-full bg-white/85" style={`height: max(2px, ${value}%)`}></span>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {/* Free vs Plus */}
+    <section class="mx-auto max-w-6xl px-6 pb-28 sm:px-10">
+        <h2 class="text-3xl font-semibold tracking-[-0.03em] text-balance sm:text-5xl">Free does the job. Plus goes further.</h2>
+        <div class="mt-10 grid gap-4 md:grid-cols-2">
+            <div class="rounded-3xl bg-white/[0.06] p-7 ring-1 ring-white/15 backdrop-blur-md">
+                <p class="text-sm font-semibold tracking-[0.14em] text-white/70 uppercase">Free</p>
+                <ul class="mt-5 space-y-3 text-white/85">
+                    {free.map((item) => (
+                        <li class="flex gap-3"><span class="text-white/60" aria-hidden="true">✓</span>{item}</li>
+                    ))}
+                </ul>
+            </div>
+            <div class="rounded-3xl bg-white/[0.1] p-7 ring-2 ring-accent/60 backdrop-blur-md">
+                <p class="text-sm font-semibold tracking-[0.14em] text-white/70 uppercase">Plus · one-time purchase</p>
+                <p class="mt-1 text-sm text-white/70">Everything in Free, and:</p>
+                <ul class="mt-4 space-y-3 text-white/85">
+                    {plusOnly.map((item) => (
+                        <li class="flex gap-3"><span class="stepglow-met inline-flex size-5 shrink-0 items-center justify-center rounded-full text-xs font-bold" aria-hidden="true">+</span>{item}</li>
+                    ))}
+                </ul>
+            </div>
+        </div>
+        <p class="mt-6 max-w-2xl text-sm leading-relaxed text-white/65">
+            Just want to say thanks? There's an optional tip jar in the app, too. Tips don't unlock anything; they just help keep Stepglow going.
+        </p>
     </section>
 </Layout>
 

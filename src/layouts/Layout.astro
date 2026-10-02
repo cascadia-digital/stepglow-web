@@ -28,6 +28,13 @@ const image = new URL('/icon.png', Astro.site);
         <meta name="twitter:card" content="summary" />
         <link rel="icon" href="/favicon.png" type="image/png" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <script is:inline>
+            // Apply a saved theme before the page paints, so it doesn't flash Midnight first.
+            try {
+                const theme = new URLSearchParams(location.search).get('theme') || localStorage.getItem('stepglow-theme');
+                if (theme && theme !== 'midnight') document.documentElement.dataset.theme = theme;
+            } catch {}
+        </script>
         <!-- Fathom - beautiful, simple website analytics -->
         <script src="https://cdn.usefathom.com/script.js" data-site="OJAOADSV" defer></script>
         <!-- / Fathom -->
@@ -42,10 +49,18 @@ const image = new URL('/icon.png', Astro.site);
         </div>
 
         <header class="mx-auto flex max-w-6xl items-center justify-between px-6 pt-6 sm:px-10 sm:pt-8">
-            <a href="/" class="flex items-center gap-3 rounded-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">
-                <img src="/icon.png" alt="" class="size-9 rounded-[22%]" width="36" height="36" />
-                <span class="text-lg font-semibold tracking-tight">Stepglow</span>
-            </a>
+            <div class="flex items-center gap-3">
+                {/* The easter egg: the icon quietly cycles through the app's themes. */}
+                <button
+                    type="button"
+                    data-theme-cycle
+                    class="rounded-[22%] transition-transform active:scale-90 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white motion-reduce:transition-none"
+                    aria-label="Change theme"
+                >
+                    <img src="/icons/midnight.png" alt="" data-theme-icon class="size-9 rounded-[22%]" width="36" height="36" />
+                </button>
+                <a href="/" class="rounded text-lg font-semibold tracking-tight focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">Stepglow</a>
+            </div>
             <nav class="flex gap-5 text-sm font-medium text-white/75">
                 <a href="/support" class="rounded px-1 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">Support</a>
                 <a href="/privacy" class="rounded px-1 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">Privacy</a>
@@ -67,5 +82,17 @@ const image = new URL('/icon.png', Astro.site);
                 </p>
             </div>
         </footer>
+
+        <p
+            data-theme-toast
+            role="status"
+            aria-live="polite"
+            class="pointer-events-none fixed bottom-[calc(1.5rem+env(safe-area-inset-bottom,0px))] left-1/2 z-50 -translate-x-1/2 translate-y-2 rounded-full bg-black/45 px-4 py-2 text-sm font-semibold opacity-0 ring-1 ring-white/20 backdrop-blur-md transition duration-300 motion-reduce:transition-none"
+        ></p>
+
+        <script>
+            import { setupThemeSwitcher } from '../scripts/themes';
+            setupThemeSwitcher();
+        </script>
     </body>
 </html>
