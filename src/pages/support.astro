@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import SupportEmail from '../components/SupportEmail.astro';
 
 const questions = [
     {
@@ -56,7 +57,7 @@ const questions = [
 
         <div class="stepglow-prose mt-14">
             <h2>Still stuck?</h2>
-            <p>Email <a href="mailto:support@stepglow.app">support@stepglow.app</a> and tell us what's happening. Your iPhone model and iOS version help. We usually reply within a couple of business days.</p>
+            <p>Email <SupportEmail /> and tell us what's happening. Your iPhone model and iOS version help. We usually reply within a couple of business days.</p>
         </div>
     </article>
 </Layout>
