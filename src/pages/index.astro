@@ -85,26 +85,32 @@ const badges = [
             </dl>
         </div>
 
-        {/* Phone */}
-        <div class="mx-auto w-full max-w-[19rem]" aria-label="The Stepglow app showing 8,432 steps" role="img">
+        {/* Phone, playing a short recording of the app. */}
+        <div class="mx-auto w-full max-w-[19rem]">
             <div class="relative rounded-[3.2rem] bg-black p-2.5 shadow-2xl shadow-black/50 ring-1 ring-white/15">
-                <div class="stepglow-screen relative isolate flex aspect-[9/19.5] flex-col overflow-hidden rounded-[2.6rem] px-6 pt-14 pb-7">
-                    <div class="absolute top-3 left-1/2 h-6 w-24 -translate-x-1/2 rounded-full bg-black"></div>
-                    <p class="relative z-10 text-[0.6rem] font-semibold tracking-[0.16em] text-white/75 uppercase">Wednesday, September 30</p>
-                    <div class="relative z-10 mt-auto">
-                        <p class="text-[4.25rem] leading-none font-semibold tracking-[-0.06em] tabular-nums" data-count="8432">8,432</p>
-                        <p class="mt-1 text-sm font-medium text-white/75">steps</p>
-                        <div class="mt-6 h-1 rounded-full bg-white/25"><div class="h-1 w-[84%] rounded-full bg-white"></div></div>
-                        <p class="mt-2.5 flex justify-between text-[0.7rem] font-medium tabular-nums">
-                            <span>84% of 10,000</span><span>6.1 km</span>
-                        </p>
-                        <div class="mt-7 flex h-12 items-end gap-[3px]">
-                            {hours.map((value, hour) => (
-                                <span class:list={['flex-1 rounded-full', hour > currentHour ? 'bg-white/20' : 'bg-white/90']} style={`height: max(3px, ${value}%)`}></span>
-                            ))}
-                        </div>
-                    </div>
-                </div>
+                <video
+                    data-tour
+                    class="block aspect-[600/1304] w-full rounded-[2.6rem] bg-night object-cover"
+                    src="/media/stepglow-tour.mp4"
+                    poster="/media/stepglow-tour-poster.jpg"
+                    muted
+                    loop
+                    playsinline
+                    preload="metadata"
+                    width="600"
+                    height="1304"
+                    aria-label="A short tour of Stepglow: the step count ticks past the daily goal, fireworks celebrate it, then the week, month and streak views and a few themes."
+                ></video>
+                <button
+                    type="button"
+                    data-tour-toggle
+                    hidden
+                    class="absolute right-5 bottom-5 flex size-10 items-center justify-center rounded-full bg-black/45 ring-1 ring-white/25 backdrop-blur-md hover:bg-black/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                    aria-label="Pause the preview"
+                >
+                    <svg data-icon-pause viewBox="0 0 20 20" class="size-4" aria-hidden="true"><path d="M6 4h3v12H6zM11 4h3v12h-3z" fill="currentColor" /></svg>
+                    <svg data-icon-play viewBox="0 0 20 20" class="hidden size-4" aria-hidden="true"><path d="M6 4l10 6-10 6z" fill="currentColor" /></svg>
+                </button>
             </div>
         </div>
     </section>
@@ -385,18 +391,28 @@ const badges = [
 </Layout>
 
 <script>
-    // Count the hero number up from zero once, unless the visitor prefers reduced motion.
-    const el = document.querySelector<HTMLElement>('[data-count]');
-    if (el && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        const target = Number(el.dataset.count);
-        const duration = 1600;
-        const start = performance.now();
-        const tick = (now: number) => {
-            const t = Math.min((now - start) / duration, 1);
-            const eased = 1 - Math.pow(1 - t, 3);
-            el.textContent = Math.round(target * eased).toLocaleString('en-US');
-            if (t < 1) requestAnimationFrame(tick);
-        };
-        requestAnimationFrame(tick);
+    // Play the tour silently, unless the visitor prefers reduced motion (they keep the still poster).
+    // The button lets anyone pause it, since it runs for more than five seconds.
+    const video = document.querySelector<HTMLVideoElement>('[data-tour]');
+    const toggle = document.querySelector<HTMLButtonElement>('[data-tour-toggle]');
+    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
+
+    function showState(playing: boolean) {
+        if (!toggle) return;
+        toggle.setAttribute('aria-label', playing ? 'Pause the preview' : 'Play the preview');
+        toggle.querySelector('[data-icon-pause]')?.classList.toggle('hidden', !playing);
+        toggle.querySelector('[data-icon-play]')?.classList.toggle('hidden', playing);
+    }
+
+    if (video && toggle) {
+        toggle.hidden = false;
+        video.addEventListener('play', () => showState(true));
+        video.addEventListener('pause', () => showState(false));
+        toggle.addEventListener('click', () => (video.paused ? video.play() : video.pause()));
+        showState(false);
+        if (!reduceMotion.matches) {
+            video.preload = 'auto';
+            video.play().catch(() => showState(false));
+        }
     }
 </script>
